@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antecedentes Docentes UBB — Sistema Conectado a Drive Institucional</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'ubb-blue': '#003A70',
+            'ubb-navy': '#002244',
+            'ubb-gold': '#F2A900'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col font-sans text-slate-800">
+
+  <!-- Header -->
+  <header class="bg-ubb-blue shadow-lg sticky top-0 z-40 border-b-4 border-ubb-gold">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-4 text-white">
+        <i class="fa-solid fa-graduation-cap text-3xl text-ubb-gold"></i>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold leading-tight">Aseguramiento de la Calidad</h1>
+          <p class="text-xs sm:text-sm text-blue-200">Recolección de Antecedentes Académicos UBB</p>
+        </div>
+      </div>
+      
+      <!-- Navigation Tabs -->
+      <div class="flex items-center bg-ubb-navy/60 p-1.5 rounded-xl border border-blue-900/50">
+        <button type="button" id="navBtnForm" onclick="switchTab('form')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-ubb-gold text-ubb-navy shadow-sm">
+          <i class="fa-solid fa-file-signature mr-2"></i>Formulario
+        </button>
+        <button type="button" id="navBtnGuide" onclick="switchTab('guide')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-blue-200 hover:text-white hover:bg-ubb-blue/50">
+          <i class="fa-solid fa-user-shield mr-2"></i>Administrador
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+    <!-- TAB 1: FORMULARIO PRINCIPAL -->
+    <div id="tabForm" class="space-y-8">
+      
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 border-l-8 border-l-ubb-blue">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+          <h2 class="text-base font-bold text-ubb-navy">Instrucciones de Llenado</h2>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Conectado a Drive Institucional UBB
+          </span>
+        </div>
+        <p class="text-sm text-slate-600 mb-2">
+          Esta encuesta recopila la información de sus actividades en los <strong>últimos 5 años</strong>. Puede agregar tantos elementos como necesite en cada categoría presionando los botones verdes <strong>"+ Agregar..."</strong>.
+        </p>
+        <p class="text-xs text-slate-500">
+          Al finalizar, presione <strong>"Enviar a Google Drive UBB"</strong> para que el sistema cree automáticamente su carpeta personal en el Drive institucional con su planilla de respuestas y los archivos adjuntos.
+        </p>
+      </div>
+
+      <form id="ubbMainForm" onsubmit="handleFormSubmission(event)">
+        
+        <!-- SECCIÓN 1: IDENTIFICACIÓN -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-ubb-navy mb-4 border-b pb-2"><i class="fa-regular fa-id-card mr-2"></i>1. Identificación del Académico/a</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nombres *</label>
+              <input type="text" id="id_nombres" required class="w-full p-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-ubb-blue outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Apellido Paterno *</label>
+              <input type="text" id="id_apPaterno" required class="w-full p-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-ubb-blue outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Apellido Materno</label>
+              <input type="text" id="id_apMaterno" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-ubb-blue outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Sexo *</label>
+              <select id="id_sexo" required class="w-full p-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-ubb-blue outline-none bg-white">
+                <option value="">Seleccione...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="No binario">No binario</option>
+              </select>
+            </div>
+            <div class="sm:col-span-2 md:col-span-4">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Carrera a la que se vinculan estos antecedentes *</label>
+              <select id="id_carrera" required class="w-full p-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-ubb-blue outline-none bg-white">
+                <option value="">Seleccione carrera...</option>
+                <option>Pedagogía en Castellano y Comunicación</option>
+                <option>Pedagogía en Ciencias Naturales, mención Biología, Física o Química</option>
+                <option>Pedagogía en Educación Especial, mención Dificultades Específicas del Aprendizaje</option>
+                <option>Pedagogía en Educación Física</option>
+                <option>Pedagogía en Educación General Básica, mención Lenguaje y Comunicación o Educación Matemática</option>
+                <option>Pedagogía en Educación Matemática</option>
+                <option>Pedagogía en Educación Parvularia, mención Didáctica en Primera Infancia</option>
+                <option>Pedagogía en Historia y Geografía</option>
+                <option>Pedagogía en Inglés</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN 2: FORMACIÓN ACADÉMICA -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-6">
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <div>
+              <h3 class="text-lg font-bold text-ubb-navy"><i class="fa-solid fa-award mr-2"></i>2. Formación Académica</h3>
+              <p class="text-xs text-slate-500">Títulos y grados académicos obtenidos.</p>
+            </div>
+            <button type="button" onclick="addNewItem('formacion')" class="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200 shadow-sm cursor-pointer">+ Agregar Título/Grado</button>
+          </div>
+          <div id="container-formacion" class="space-y-4"></div>
+        </section>
+
+        <!-- SECCIÓN 3: MATERIAL EDUCATIVO -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-6">
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <div>
+              <h3 class="text-lg font-bold text-ubb-navy"><i class="fa-solid fa-book-open mr-2"></i>3. Material Educativo Original</h3>
+              <p class="text-xs text-slate-500">Material educativo diseñado para la docencia en los últimos 5 años.</p>
+            </div>
+            <button type="button" onclick="addNewItem('material')" class="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200 shadow-sm cursor-pointer">+ Agregar Material</button>
+          </div>
+          <div id="container-material" class="space-y-4"></div>
+        </section>
+
+        <!-- SECCIÓN 4: TRABAJO ACADÉMICO -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-6">
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <div>
+              <h3 class="text-lg font-bold text-ubb-navy"><i class="fa-solid fa-file-lines mr-2"></i>4. Trabajo Académico Original</h3>
+              <p class="text-xs text-slate-500">Publicaciones, monografías, ensayos y trabajos disciplinares/pedagógicos.</p>
+            </div>
+            <button type="button" onclick="addNewItem('trabajo')" class="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200 shadow-sm cursor-pointer">+ Agregar Trabajo</button>
+          </div>
+          <div id="container-trabajo" class="space-y-4"></div>
+        </section>
+
+        <!-- SECCIÓN 5: INVESTIGACIÓN E INNOVACIÓN -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-6">
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <div>
+              <h3 class="text-lg font-bold text-ubb-navy"><i class="fa-solid fa-flask mr-2"></i>5. Investigación e Innovación</h3>
+              <p class="text-xs text-slate-500">Proyectos con o sin financiamiento y su aporte a las asignaturas.</p>
+            </div>
+            <button type="button" onclick="addNewItem('investigacion')" class="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200 shadow-sm cursor-pointer">+ Agregar Proyecto</button>
+          </div>
+          <div id="container-investigacion" class="space-y-4"></div>
+        </section>
+
+        <!-- SECCIÓN 6: CENTROS, GRUPOS Y REDES -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-6">
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <div>
+              <h3 class="text-lg font-bold text-ubb-navy"><i class="fa-solid fa-users-rectangle mr-2"></i>6. Centros, Grupos, Programas y Redes</h3>
+              <p class="text-xs text-slate-500">Participación en agrupaciones o redes académicas.</p>
+            </div>
+            <button type="button" onclick="addNewItem('centros')" class="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200 shadow-sm cursor-pointer">+ Agregar Participación</button>
+          </div>
+          <div id="container-centros" class="space-y-4"></div>
+        </section>
+
+        <!-- SECCIÓN 7: EXPERIENCIA EN SISTEMA ESCOLAR -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-6">
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <div>
+              <h3 class="text-lg font-bold text-ubb-navy"><i class="fa-solid fa-school mr-2"></i>7. Experiencia en el Sistema Escolar</h3>
+              <p class="text-xs text-slate-500">Actividades de vinculación, asesorías o docencia en colegios u organismos.</p>
+            </div>
+            <button type="button" onclick="addNewItem('escolar')" class="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200 shadow-sm cursor-pointer">+ Agregar Experiencia</button>
+          </div>
+          <div id="container-escolar" class="space-y-4"></div>
+        </section>
+
+        <!-- Barra de Envío y Respaldo -->
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 flex flex-col md:flex-row items-center justify-between gap-4 sticky bottom-4 z-30 mt-8">
+          <div>
+            <p class="text-xs font-bold text-slate-700">Finalizar y Enviar Antecedentes</p>
+            <p class="text-xs text-slate-500">Sus respuestas y archivos se guardarán en su carpeta personal del Drive Institucional.</p>
+          </div>
+          <div class="flex flex-wrap gap-2.5 w-full md:w-auto justify-end">
+            <button type="submit" id="submitDriveBtn" onclick="document.getElementById('actionType').value='drive'" class="flex-1 md:flex-none px-6 py-3.5 bg-ubb-blue hover:bg-ubb-navy text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center cursor-pointer">
+              <i class="fa-brands fa-google-drive text-ubb-gold text-sm mr-2"></i>Enviar a Google Drive UBB
+            </button>
+            <button type="submit" id="submitJsonBtn" onclick="document.getElementById('actionType').value='json'" class="px-4 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 transition-all cursor-pointer">
+              <i class="fa-solid fa-download mr-1.5"></i>Respaldo .JSON
+            </button>
+            <button type="submit" id="submitCsvBtn" onclick="document.getElementById('actionType').value='csv'" class="px-4 py-3.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-sm transition-all cursor-pointer">
+              <i class="fa-solid fa-file-csv text-emerald-400 mr-1.5"></i>.CSV
+            </button>
+          </div>
+          <input type="hidden" id="actionType" value="drive">
+        </div>
+
+      </form>
+    </div>
+
+    <!-- TAB 2: VISTA ADMINISTRADOR -->
+    <div id="tabGuide" class="hidden space-y-8">
+      <div class="bg-gradient-to-r from-ubb-blue to-ubb-navy text-white rounded-2xl p-6 shadow-md border-b-4 border-ubb-gold">
+        <h2 class="text-xl font-bold mb-2"><i class="fa-solid fa-folder-open text-ubb-gold mr-2"></i> Panel del Administrador</h2>
+        <p class="text-sm text-blue-100">
+          Utiliza este panel para inspeccionar respaldos <strong>.JSON</strong> entregados manualmente o verificar la conexión con el Google Drive institucional.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <h3 class="font-bold text-ubb-navy mb-4 border-b pb-2"><i class="fa-solid fa-file-import mr-2"></i>Cargar Respaldo (.JSON) de Académico</h3>
+        <input type="file" id="adminJsonInput" accept=".json" onchange="loadAdminJson(event)" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-ubb-blue file:text-white hover:file:bg-ubb-navy cursor-pointer">
+      </div>
+
+      <div id="adminResults" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-ubb-navy border-b pb-2 mb-4" id="adminDocenteHeader">Datos del Docente</h3>
+          <div id="adminDocenteInfo" class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs"></div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-ubb-navy border-b pb-2 mb-4">Antecedentes Registrados y Evidencias</h3>
+          <div id="adminItemsList" class="space-y-4"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal de confirmación -->
+  <div id="responseModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center">
+      <div id="modalIconBox" class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+        <i id="modalIcon" class="fa-solid fa-check"></i>
+      </div>
+      <h3 class="text-xl font-bold text-slate-800 mb-2" id="modalTitle">¡Operación Exitosa!</h3>
+      <div class="text-sm text-slate-600 mb-6 space-y-2" id="modalText"></div>
+      <button type="button" onclick="toggleModal('responseModal')" class="w-full bg-ubb-blue hover:bg-ubb-navy text-white font-bold py-3 rounded-xl transition-all text-xs cursor-pointer">
+        Entendido
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxm8uR4H9Y84xyRPhQfo1Xd4m2cXWFrW6qteA6N4lcdhDJzeFYdLYlpGGhUSRckHGEq/exec";
+
+    let counters = {
+      formacion: 0,
+      material: 0,
+      trabajo: 0,
+      investigacion: 0,
+      centros: 0,
+      escolar: 0
+    };
+
+    const opcionesAspectos = [
+      "Perfil de egreso",
+      "Competencias pedagógicas",
+      "Competencias disciplinarias",
+      "Resultados de aprendizaje",
+      "Docencia en general",
+      "Metodologías de enseñanza-aprendizaje",
+      "Estrategias de evaluación de los aprendizajes",
+      "Bibliografía fundamental",
+      "Bibliografía complementaria",
+      "Vocación pedagógica"
+    ];
+
+    function switchTab(tabId) {
+      document.getElementById("tabForm").classList.toggle("hidden", tabId !== "form");
+      document.getElementById("tabGuide").classList.toggle("hidden", tabId !== "guide");
+      
+      const btnForm = document.getElementById("navBtnForm");
+      const btnGuide = document.getElementById("navBtnGuide");
+      
+      if (tabId === "form") {
+        btnForm.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-ubb-gold text-ubb-navy shadow-sm";
+        btnGuide.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all text-blue-200 hover:text-white hover:bg-ubb-blue/50";
+      } else {
+        btnGuide.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-ubb-gold text-ubb-navy shadow-sm";
+        btnForm.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all text-blue-200 hover:text-white hover:bg-ubb-blue/50";
+      }
+    }
+
+    function toggleEvidencia(selectElement, cat, index) {
+      const isFile = selectElement.value === "archivo";
+      document.getElementById("ev-url-box-" + cat + "-" + index).classList.toggle("hidden", isFile);
+      document.getElementById("ev-file-box-" + cat + "-" + index).classList.toggle("hidden", !isFile);
+    }
+
+    function removeItem(btn) {
+      btn.closest(".item-card").remove();
+    }
+
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.toggle("hidden");
+    }
+
+    function getAspectosCheckboxesHTML() {
+      return opcionesAspectos.map(function(asp) {
+        return '<label class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md text-xs text-slate-700 cursor-pointer">' +
+          '<input type="checkbox" value="' + asp + '" class="field-aspecto rounded text-ubb-blue focus:ring-ubb-blue"> ' + asp +
+          '</label>';
+      }).join("");
+    }
+
+    function addNewItem(cat) {
+      counters[cat]++;
+      const idx = counters[cat];
+      const container = document.getElementById("container-" + cat);
+      if (!container) return;
+
+      const div = document.createElement("div");
+      div.className = "item-card bg-slate-50 border border-slate-200 rounded-xl p-4 relative";
+      
+      let html = '<button type="button" onclick="removeItem(this)" class="absolute top-4 right-4 text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 px-2.5 py-1 rounded-lg border border-red-100 cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Eliminar</button>';
+
+      if (cat === "formacion") {
+        html += '<div class="grid grid-cols-1 md:grid-cols-4 gap-3 pr-24">' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Título o Grado *</label><input type="text" class="field-titulo w-full p-2 border rounded-lg text-xs bg-white" required placeholder="Licenciatura, Magíster..."></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Año Obtención *</label><input type="number" class="field-anio w-full p-2 border rounded-lg text-xs bg-white" required placeholder="2022"></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Institución *</label><input type="text" class="field-institucion w-full p-2 border rounded-lg text-xs bg-white" required placeholder="Universidad del Bío-Bío"></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">País *</label><input type="text" class="field-pais w-full p-2 border rounded-lg text-xs bg-white" required placeholder="Chile"></div>' +
+          '</div>';
+      } else if (cat === "material") {
+        html += '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 pr-24">' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Material *</label>' +
+          '<select class="field-tipo w-full p-2 border rounded-lg text-xs bg-white" required>' +
+          '<option>Evaluaciones: pruebas, pautas, rúbricas</option>' +
+          '<option>Material audiovisual: cápsulas, videos</option>' +
+          '<option>Material multimedia: presentaciones, animaciones</option>' +
+          '<option>Material escrito: guías, manuales</option>' +
+          '<option>TIC: plataformas, software</option>' +
+          '</select></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Título *</label><input type="text" class="field-titulo w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Año Elaboración *</label><input type="number" class="field-anio w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '<div class="md:col-span-3"><label class="block text-xs font-bold text-slate-700 mb-1">Asignatura(s) a las que contribuye *</label><input type="text" class="field-asignaturas w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '</div>' +
+          '<div class="mb-3"><label class="block text-xs font-bold text-slate-700 mb-1">Aspectos beneficiados</label><div class="flex flex-wrap gap-1.5">' + getAspectosCheckboxesHTML() + '</div></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Descripción sintética del aporte</label><textarea class="field-descripcion w-full p-2 border rounded-lg text-xs bg-white" rows="2"></textarea></div>' +
+          getEvidenciaBoxHTML(cat, idx);
+      } else if (cat === "trabajo") {
+        html += '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 pr-24">' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Trabajo *</label>' +
+          '<select class="field-tipo w-full p-2 border rounded-lg text-xs bg-white" required>' +
+          '<option>Tesis de grado académico</option>' +
+          '<option>Artículo de investigación</option>' +
+          '<option>Ensayo académico</option>' +
+          '<option>Monografía</option>' +
+          '</select></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Título *</label><input type="text" class="field-titulo w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Año Elaboración *</label><input type="number" class="field-anio w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '<div class="md:col-span-3"><label class="block text-xs font-bold text-slate-700 mb-1">Asignatura(s) a las que contribuye *</label><input type="text" class="field-asignaturas w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '</div>' +
+          '<div class="mb-3"><label class="block text-xs font-bold text-slate-700 mb-1">Aspectos beneficiados</label><div class="flex flex-wrap gap-1.5">' + getAspectosCheckboxesHTML() + '</div></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Descripción sintética del aporte</label><textarea class="field-descripcion w-full p-2 border rounded-lg text-xs bg-white" rows="2"></textarea></div>' +
+          getEvidenciaBoxHTML(cat, idx);
+      } else if (cat === "investigacion") {
+        html += '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 pr-24">' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Tipo Proyecto *</label><input type="text" class="field-tipo w-full p-2 border rounded-lg text-xs bg-white" placeholder="Fundamental, Aplicada..." required></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Fuente Financiamiento *</label><input type="text" class="field-financiamiento w-full p-2 border rounded-lg text-xs bg-white" placeholder="Fondecyt, Interno..." required></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Título Proyecto *</label><input type="text" class="field-titulo w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Año Inicio - Término</label><input type="text" class="field-anio w-full p-2 border rounded-lg text-xs bg-white" placeholder="2021-2023"></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Participación</label>' +
+          '<select class="field-participacion w-full p-2 border rounded-lg text-xs bg-white">' +
+          '<option>Investigador Principal</option><option>Coinvestigador</option><option>Colaborador</option>' +
+          '</select></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Asignaturas a las que contribuye</label><input type="text" class="field-asignaturas w-full p-2 border rounded-lg text-xs bg-white"></div>' +
+          '</div>' +
+          '<div class="mb-3"><label class="block text-xs font-bold text-slate-700 mb-1">Aspectos beneficiados</label><div class="flex flex-wrap gap-1.5">' + getAspectosCheckboxesHTML() + '</div></div>' +
+          getEvidenciaBoxHTML(cat, idx);
+      } else if (cat === "centros") {
+        html += '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 pr-24">' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Tipo Agrupación *</label>' +
+          '<select class="field-tipo w-full p-2 border rounded-lg text-xs bg-white" required>' +
+          '<option>Centro</option><option>Grupo</option><option>Programa</option><option>Red</option>' +
+          '</select></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Nombre Entidad *</label><input type="text" class="field-titulo w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Años / Situación</label><input type="text" class="field-anio w-full p-2 border rounded-lg text-xs bg-white" placeholder="2020-Vigente"></div>' +
+          '</div>' +
+          getEvidenciaBoxHTML(cat, idx);
+      } else if (cat === "escolar") {
+        html += '<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 pr-24">' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Establecimiento / Organismo *</label><input type="text" class="field-titulo w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Años (Inicio - Término)</label><input type="text" class="field-anio w-full p-2 border rounded-lg text-xs bg-white" placeholder="2021-2023"></div>' +
+          '<div><label class="block text-xs font-bold text-slate-700 mb-1">Actividad / Cargo *</label><input type="text" class="field-cargo w-full p-2 border rounded-lg text-xs bg-white" required></div>' +
+          '</div>' +
+          getEvidenciaBoxHTML(cat, idx);
+      }
+
+      div.innerHTML = html;
+      container.appendChild(div);
+    }
+
+    function getEvidenciaBoxHTML(cat, idx) {
+      return '<div class="mt-3 p-3 bg-white border rounded-lg">' +
+        '<label class="block text-xs font-bold text-slate-700 mb-1">Evidencia</label>' +
+        '<select onchange="toggleEvidencia(this, \'' + cat + '\', ' + idx + ')" class="field-evidenciaTipo w-full p-2 border rounded-lg text-xs mb-2 bg-slate-50">' +
+        '<option value="url">Enlace público (Drive, Web, etc.)</option>' +
+        '<option value="archivo">Adjuntar Archivo Local (Se guardará en su carpeta Drive UBB)</option>' +
+        '</select>' +
+        '<div id="ev-url-box-' + cat + '-' + idx + '"><input type="url" class="field-evidenciaUrl w-full p-2 border rounded-lg text-xs" placeholder="https://..."></div>' +
+        '<div id="ev-file-box-' + cat + '-' + idx + '" class="hidden"><input type="file" class="field-file w-full p-2 border rounded-lg text-xs"></div>' +
+        '</div>';
+    }
+
+    function fileToBase64(file) {
+      return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+        reader.onload = function() {
+          resolve({
+            name: file.name,
+            mime: file.type,
+            base64: reader.result
+          });
+        };
+        reader.onerror = function(error) { reject(error); };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function collectItemsFromContainer(category) {
+      const container = document.getElementById("container-" + category);
+      if (!container) return [];
+      const cards = container.querySelectorAll(".item-card");
+      const items = [];
+
+      for (const card of cards) {
+        const obj = {};
+        card.querySelectorAll('input[type="text"], input[type="number"], input[type="url"], select, textarea').forEach(function(input) {
+          const field = Array.from(input.classList).find(function(c) { return c.indexOf("field-") === 0; });
+          if (field) {
+            obj[field.replace("field-", "")] = input.value;
+          }
+        });
+
+        const aspectosChecked = Array.from(card.querySelectorAll(".field-aspecto:checked")).map(function(cb) { return cb.value; });
+        if (aspectosChecked.length > 0) {
+          obj.aspectos = aspectosChecked;
+        }
+
+        const fileInput = card.querySelector(".field-file");
+        if (fileInput && fileInput.files.length > 0) {
+          obj.fileData = await fileToBase64(fileInput.files[0]);
+        }
+
+        items.push(obj);
+      }
+      return items;
+    }
+
+    async function handleFormSubmission(e) {
+      e.preventDefault();
+      const action = document.getElementById("actionType").value;
+      const driveBtn = document.getElementById("submitDriveBtn");
+      const origText = driveBtn.innerHTML;
+
+      try {
+        if (action === "drive") {
+          driveBtn.disabled = true;
+          driveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Subiendo a Drive UBB...';
+        }
+
+        const payload = {
+          docente: {
+            nombres: document.getElementById("id_nombres").value.trim(),
+            apellidoPaterno: document.getElementById("id_apPaterno").value.trim(),
+            apellidoMaterno: document.getElementById("id_apMaterno").value.trim(),
+            sexo: document.getElementById("id_sexo").value,
+            carrera: document.getElementById("id_carrera").value
+          },
+          formacion: await collectItemsFromContainer("formacion"),
+          material: await collectItemsFromContainer("material"),
+          trabajo: await collectItemsFromContainer("trabajo"),
+          investigacion: await collectItemsFromContainer("investigacion"),
+          centros: await collectItemsFromContainer("centros"),
+          escolar: await collectItemsFromContainer("escolar")
+        };
+
+        const cleanName = (payload.docente.apellidoPaterno + "_" + payload.docente.nombres).replace(/[^a-zA-Z0-9_]/g, "_");
+
+        if (action === "drive") {
+          const response = await fetch(WEB_APP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+          });
+
+          const resData = await response.json();
+
+          if (resData.status === "ok") {
+            document.getElementById("modalTitle").innerText = "¡Guardado en Drive Institucional!";
+            document.getElementById("modalText").innerHTML =
+              "<p>Se ha creado su carpeta personal con su planilla de respuestas y evidencias adjuntas.</p>" +
+              '<div class="mt-4 flex flex-col gap-2">' +
+              '<a href="' + resData.folderUrl + '" target="_blank" class="block w-full py-2 px-3 bg-emerald-50 text-emerald-700 font-bold rounded-lg border border-emerald-200 hover:bg-emerald-100 text-xs">' +
+              '<i class="fa-brands fa-google-drive mr-1"></i> Abrir Carpeta del Académico</a>' +
+              '<a href="' + resData.sheetUrl + '" target="_blank" class="block w-full py-2 px-3 bg-blue-50 text-ubb-blue font-bold rounded-lg border border-blue-200 hover:bg-blue-100 text-xs">' +
+              '<i class="fa-solid fa-table mr-1"></i> Ver Planilla Google Sheets</a>' +
+              "</div>";
+            toggleModal("responseModal");
+          } else {
+            throw new Error(resData.message || "Error desconocido en el servidor Apps Script.");
+          }
+        } else if (action === "json") {
+          const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "Antecedentes_" + cleanName + ".json";
+          a.click();
+          URL.revokeObjectURL(url);
+
+          document.getElementById("modalTitle").innerText = "¡Respaldo JSON Descargado!";
+          document.getElementById("modalText").innerText = "El archivo .JSON con sus respuestas y adjuntos incrustados se ha descargado en su equipo.";
+          toggleModal("responseModal");
+        } else if (action === "csv") {
+          const rows = ["\uFEFFCategoria,Docente,Carrera,Tipo_Cargo,Titulo_Entidad,Anio,Detalles,Aspectos,Descripcion,Evidencia_URL_o_Archivo"];
+          const nombreDocente = (payload.docente.nombres + " " + payload.docente.apellidoPaterno + " " + payload.docente.apellidoMaterno).trim();
+          const categorias = ["formacion", "material", "trabajo", "investigacion", "centros", "escolar"];
+
+          categorias.forEach(function(cat) {
+            payload[cat].forEach(function(item) {
+              const tipo = item.tipo || item.cargo || "Título/Grado";
+              const detalles = [item.institucion, item.pais, item.asignaturas, item.financiamiento, item.participacion].filter(Boolean).join(" | ");
+              const aspectos = (item.aspectos || []).join("; ");
+              const evidencia = item.fileData ? "[Archivo: " + item.fileData.name + "]" : (item.evidenciaUrl || "");
+              const row = [
+                cat,
+                nombreDocente,
+                payload.docente.carrera,
+                tipo,
+                (item.titulo || "").replace(/"/g, '""'),
+                item.anio || "",
+                detalles.replace(/"/g, '""'),
+                aspectos,
+                (item.descripcion || "").replace(/"/g, '""'),
+                evidencia
+              ].map(function(val) { return '"' + val + '"'; }).join(",");
+              rows.push(row);
+            });
+          });
+
+          const blob = new Blob([rows.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "Resumen_" + cleanName + ".csv";
+          a.click();
+          URL.revokeObjectURL(url);
+
+          document.getElementById("modalTitle").innerText = "¡Resumen CSV Descargado!";
+          document.getElementById("modalText").innerText = "El archivo .CSV compatible con Excel se ha descargado correctamente.";
+          toggleModal("responseModal");
+        }
+      } catch (err) {
+        alert("Ocurrió un problema al enviar los datos: " + err.message);
+      } finally {
+        driveBtn.disabled = false;
+        driveBtn.innerHTML = origText;
+      }
+    }
+
+    function loadAdminJson(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          renderAdminView(data);
+        } catch (err) {
+          alert("Archivo JSON inválido.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function renderAdminView(data) {
+      document.getElementById("adminResults").classList.remove("hidden");
+      const d = data.docente || {};
+      document.getElementById("adminDocenteInfo").innerHTML =
+        '<div><span class="font-bold text-slate-500 block">Nombre:</span> ' + (d.nombres || "") + " " + (d.apellidoPaterno || "") + " " + (d.apellidoMaterno || "") + "</div>" +
+        '<div><span class="font-bold text-slate-500 block">Sexo:</span> ' + (d.sexo || "") + "</div>" +
+        '<div class="col-span-2"><span class="font-bold text-slate-500 block">Carrera:</span> ' + (d.carrera || "") + "</div>";
+
+      const list = document.getElementById("adminItemsList");
+      list.innerHTML = "";
+      const categorias = [
+        { key: "formacion", label: "Formación Académica" },
+        { key: "material", label: "Material Educativo" },
+        { key: "trabajo", label: "Trabajo Académico" },
+        { key: "investigacion", label: "Investigación e Innovación" },
+        { key: "centros", label: "Centros, Grupos y Redes" },
+        { key: "escolar", label: "Experiencia Escolar" }
+      ];
+
+      categorias.forEach(function(cat) {
+        const items = data[cat.key] || [];
+        items.forEach(function(item) {
+          const card = document.createElement("div");
+          card.className = "p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1.5";
+          let evHTML = "";
+          if (item.fileData && item.fileData.base64) {
+            evHTML = '<a href="' + item.fileData.base64 + '" download="' + item.fileData.name + '" class="inline-flex items-center gap-1.5 mt-2 px-3 py-1.5 bg-ubb-blue text-white font-bold rounded-lg hover:bg-ubb-navy"><i class="fa-solid fa-file-arrow-down"></i> Descargar Evidencia (' + item.fileData.name + ')</a>';
+          } else if (item.evidenciaUrl) {
+            evHTML = '<a href="' + item.evidenciaUrl + '" target="_blank" class="inline-flex items-center gap-1.5 mt-2 text-ubb-blue font-bold underline"><i class="fa-solid fa-link"></i> Abrir Enlace de Evidencia</a>';
+          }
+
+          card.innerHTML =
+            '<div class="font-bold text-ubb-navy uppercase tracking-wider">' + cat.label + " — " + (item.tipo || item.cargo || "Registro") + " (" + (item.anio || "S/A") + ")</div>" +
+            '<div class="text-sm font-bold text-slate-800">' + (item.titulo || "") + "</div>" +
+            (item.descripcion ? '<p class="text-slate-600">' + item.descripcion + "</p>" : "") +
+            evHTML;
+          list.appendChild(card);
+        });
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", function() {
+      addNewItem("formacion");
+    });
+  </script>
+</body>
+</html>
